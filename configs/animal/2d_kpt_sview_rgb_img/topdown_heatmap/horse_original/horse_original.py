@@ -1,8 +1,8 @@
 _base_ = [
     '../../../../_base_/default_runtime.py',
-    '../../../../_base_/datasets/animalpose.py'
+    '../../../../_base_/datasets/horse_original.py'
 ]
-evaluation = dict(interval=10, metric='mAP', save_best='AP')
+evaluation = dict(interval=210, metric='mAP', save_best='AP')
 
 optimizer = dict(
     type='Adam',
@@ -37,8 +37,6 @@ channel_cfg = dict(
 # model settings
 model = dict(
     type='TopDown',
-    pretrained='https://download.openmmlab.com/mmpose/'
-    'pretrain_models/hrnet_w48-8ef0771d.pth',
     backbone=dict(
         type='HRNet',
         in_channels=3,
@@ -146,29 +144,30 @@ val_pipeline = [
 test_pipeline = val_pipeline
 
 data_root = 'data/animalpose'
+horse_original_path = "data/horse_original"
 data = dict(
     samples_per_gpu=64,
     workers_per_gpu=2,
     val_dataloader=dict(samples_per_gpu=32),
     test_dataloader=dict(samples_per_gpu=32),
     train=dict(
-        type='AnimalPoseDataset',
-        ann_file=f'{data_root}/annotations/animalpose_train.json',
-        img_prefix=f'{data_root}/image/',
+        type='HorseOriginal',
+        ann_file=f'{horse_original_path}/annotations/train.json',
+        img_prefix=f'{horse_original_path}/image/',
         data_cfg=data_cfg,
         pipeline=train_pipeline,
         dataset_info={{_base_.dataset_info}}),
     val=dict(
-        type='AnimalPoseDataset',
-        ann_file=f'{data_root}/annotations/animalpose_val.json',
-        img_prefix=f'{data_root}/',
+        type='HorseOriginal',
+        ann_file=f'{horse_original_path}/annotations/val.json',
+        img_prefix=f'{horse_original_path}/image/',
         data_cfg=data_cfg,
         pipeline=val_pipeline,
         dataset_info={{_base_.dataset_info}}),
     test=dict(
-        type='AnimalPoseDataset',
-        ann_file=f'{data_root}/annotations/animalpose_val.json',
-        img_prefix=f'{data_root}/',
+        type='HorseOriginal',
+        ann_file=f'{horse_original_path}/annotations/val.json',
+        img_prefix=f'{horse_original_path}/image/',
         data_cfg=data_cfg,
         pipeline=test_pipeline,
         dataset_info={{_base_.dataset_info}}),
